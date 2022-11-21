@@ -38,7 +38,7 @@ class Gestor private constructor() {
         }
     }
 
-    fun select(): MutableList<MisProductos> {
+    fun selectAll(): MutableList<MisProductos> {
         var productos: MutableList<MisProductos> = mutableListOf()
 
         if (conn != null) {
@@ -60,6 +60,53 @@ class Gestor private constructor() {
             }
         }
         return productos
+    }
+
+    fun selectProducto(id_producto: String): MisProductos? {
+        var producto: MisProductos? = null
+
+        if (conn != null) {
+            try {
+                conn!!.prepareStatement("SELECT * FROM productos WHERE id = '$id_producto'").use { statement ->
+                    //statement.setDouble(1, id)
+                    //println(statement)
+                    val results = statement.executeQuery()
+
+                    while (results.next()) {
+                        val id = results.getString("ID")
+                        val nombre = results.getString("Nombre")
+                        val precio = results.getInt("Precio")
+                        val cantidad = results.getInt("Cantidad")
+                        val descripcion = results.getString("Descripcion")
+                        producto = MisProductos(id, nombre, precio, cantidad, descripcion)
+                    }
+                }
+
+            } catch (e: SQLException) {
+                printSQLException(e)
+            }
+        }
+
+        return producto
+    }
+
+    fun insertProducto(producto: MisProductos) {
+        if (conn != null) {
+            try {
+                conn!!.prepareStatement("INSERT INTO productos (ID, Nombre, Precio, Cantidad, Descripcion) VALUES (?,?,?,?,?)").use { statement ->
+                    statement.setString(1, producto.id)
+                    statement.setString(2, producto.nombre)
+                    statement.setInt(3, producto.precio)
+                    statement.setInt(4,producto.cantidad)
+                    statement.setString(5,producto.descripcion)
+                    println(statement)
+                    statement.executeUpdate()
+                }
+                //conn!!.commit()
+            } catch (e: SQLException) {
+                printSQLException(e)
+            }
+        }
     }
 
     private fun printSQLException(ex: SQLException) {
