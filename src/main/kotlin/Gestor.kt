@@ -103,9 +103,8 @@ class Gestor private constructor() {
                     statement.setString(5,producto.descripcion)
                     println(statement)
                     statement.executeUpdate()
-                    conn!!.commit()
                 }
-                //conn!!.commit()
+                conn!!.commit()
             } catch (e: SQLException) {
                 conn!!.rollback()
                 printSQLException(e)
