@@ -1,3 +1,6 @@
+import SQLStatements.Companion.INSERT_PRODUCT
+import SQLStatements.Companion.SELECT_ALL_PRODUCTS
+import SQLStatements.Companion.SELECT_PRODUCT_BY_ID
 import java.sql.*
 
 class Gestor private constructor() {
@@ -43,7 +46,7 @@ class Gestor private constructor() {
 
         if (conn != null) {
             try {
-                conn!!.prepareStatement("SELECT * FROM productos;").use { statement ->
+                conn!!.prepareStatement(SELECT_ALL_PRODUCTS).use { statement ->
                     val results = statement.executeQuery()
 
                     while (results.next()) {
@@ -67,18 +70,16 @@ class Gestor private constructor() {
 
         if (conn != null) {
             try {
-                conn!!.prepareStatement("SELECT * FROM productos WHERE id = '$id_producto'").use { statement ->
-                    //statement.setDouble(1, id)
-                    //println(statement)
+                conn!!.prepareStatement(SELECT_PRODUCT_BY_ID).use { statement ->
+                    statement.setString(1, id_producto)
                     val results = statement.executeQuery()
 
                     while (results.next()) {
-                        val id = results.getString("ID")
                         val nombre = results.getString("Nombre")
                         val precio = results.getInt("Precio")
                         val cantidad = results.getInt("Cantidad")
                         val descripcion = results.getString("Descripcion")
-                        producto = MisProductos(id, nombre, precio, cantidad, descripcion)
+                        producto = MisProductos(id_producto, nombre, precio, cantidad, descripcion)
                     }
                 }
 
@@ -93,7 +94,7 @@ class Gestor private constructor() {
     fun insertProducto(producto: MisProductos) {
         if (conn != null) {
             try {
-                conn!!.prepareStatement("INSERT INTO productos (ID, Nombre, Precio, Cantidad, Descripcion) VALUES (?,?,?,?,?)").use { statement ->
+                conn!!.prepareStatement(INSERT_PRODUCT).use { statement ->
                     statement.setString(1, producto.id)
                     statement.setString(2, producto.nombre)
                     statement.setInt(3, producto.precio)
