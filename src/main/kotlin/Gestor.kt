@@ -93,6 +93,7 @@ class Gestor private constructor() {
 
     fun insertProducto(producto: MisProductos) {
         if (conn != null) {
+            conn!!.autoCommit = false
             try {
                 conn!!.prepareStatement(INSERT_PRODUCT).use { statement ->
                     statement.setString(1, producto.id)
@@ -102,9 +103,11 @@ class Gestor private constructor() {
                     statement.setString(5,producto.descripcion)
                     println(statement)
                     statement.executeUpdate()
+                    conn!!.commit()
                 }
                 //conn!!.commit()
             } catch (e: SQLException) {
+                conn!!.rollback()
                 printSQLException(e)
             }
         }
