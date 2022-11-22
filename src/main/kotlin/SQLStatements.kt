@@ -5,5 +5,6 @@ class SQLStatements {
         const val INSERT_PRODUCT = "INSERT INTO productos (ID, Nombre, Precio, Cantidad, Descripcion) VALUES (?,?,?,?,?);"
 
         const val SELECT_WITH_STOCK = "SELECT * FROM productos WHERE cantidad > 0"
+        const val DELETE_PRODUCT = "DELETE FROM productos WHERE NOMBRE = ? "
     }
 }
