@@ -1,6 +1,7 @@
 import SQLStatements.Companion.INSERT_PRODUCT
 import SQLStatements.Companion.SELECT_ALL_PRODUCTS
 import SQLStatements.Companion.SELECT_PRODUCT_BY_ID
+import SQLStatements.Companion.SELECT_WITH_STOCK
 import java.sql.*
 
 class Gestor private constructor() {
@@ -40,6 +41,29 @@ class Gestor private constructor() {
             println("[No existe conexión a la BBDD]")
         }
     }
+
+    fun consultarStock() : MutableList<MisProductos> {
+        var productosConStock : MutableList<MisProductos> = mutableListOf()
+
+        if (conn != null) {
+            try {
+                conn!!.prepareStatement(SELECT_WITH_STOCK).use { statement ->
+                    val results = statement.executeQuery()
+
+                    while (results.next()) {
+                        val id = results.getString("ID")
+                        val nombre = results.getString("Nombre")
+                        val precio = results.getInt("Precio")
+                        val cantidad = results.getInt("Cantidad")
+                        val descripcion = results.getString("Descripcion")
+                        productosConStock.add(MisProductos(id, nombre, precio, cantidad, descripcion))
+                    }
+                }
+                }
+                catch (e : SQLException){printSQLException(e)}
+            }
+        return productosConStock
+        }
 
     fun selectAll(): MutableList<MisProductos> {
         var productos: MutableList<MisProductos> = mutableListOf()
@@ -90,6 +114,7 @@ class Gestor private constructor() {
 
         return producto
     }
+
 
     fun insertProducto(producto: MisProductos) {
         if (conn != null) {
