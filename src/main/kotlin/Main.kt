@@ -2,13 +2,12 @@ fun main() {
     val dbInstance: Gestor = Gestor.getInstance()
     dbInstance.conectarBBDD()
 
-    var selectStock = dbInstance.consultarStock()
-    selectStock.forEach { println(it) }
+    dbInstance.eliminarProducto("Nocilla")
 
+    var selectAll = dbInstance.selectAll()
+    selectAll.forEach { println(it) }
 /*
 
-   var selectAll = dbInstance.selectAll()
-  selectAll.forEach { println(it) }
 
     val selectProducto = dbInstance.selectProducto("12345678")
     if (selectProducto != null) {
@@ -22,4 +21,3 @@ fun main() {
  */
     dbInstance.desconectar()
 }
-
