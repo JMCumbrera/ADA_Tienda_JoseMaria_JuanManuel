@@ -1,3 +1,4 @@
+import SQLStatements.Companion.DELETE_PRODUCT
 import SQLStatements.Companion.INSERT_PRODUCT
 import SQLStatements.Companion.SELECT_ALL_PRODUCTS
 import SQLStatements.Companion.SELECT_PRODUCT_BY_ID
@@ -27,7 +28,7 @@ class Gestor private constructor() {
     fun conectarBBDD() {
         if (conn == null) {
             println("[Conexión realizada]")
-            conn = DriverManager.getConnection(url+bd, user, password)
+            conn = DriverManager.getConnection(url + bd, user, password)
         } else {
             println("[Conexión ya existente]")
         }
@@ -41,29 +42,6 @@ class Gestor private constructor() {
             println("[No existe conexión a la BBDD]")
         }
     }
-
-    fun consultarStock() : MutableList<MisProductos> {
-        var productosConStock : MutableList<MisProductos> = mutableListOf()
-
-        if (conn != null) {
-            try {
-                conn!!.prepareStatement(SELECT_WITH_STOCK).use { statement ->
-                    val results = statement.executeQuery()
-
-                    while (results.next()) {
-                        val id = results.getString("ID")
-                        val nombre = results.getString("Nombre")
-                        val precio = results.getInt("Precio")
-                        val cantidad = results.getInt("Cantidad")
-                        val descripcion = results.getString("Descripcion")
-                        productosConStock.add(MisProductos(id, nombre, precio, cantidad, descripcion))
-                    }
-                }
-                }
-                catch (e : SQLException){printSQLException(e)}
-            }
-        return productosConStock
-        }
 
     fun selectAll(): MutableList<MisProductos> {
         var productos: MutableList<MisProductos> = mutableListOf()
@@ -87,6 +65,30 @@ class Gestor private constructor() {
             }
         }
         return productos
+    }
+
+    fun consultarStock(): MutableList<MisProductos> {
+        var productosConStock: MutableList<MisProductos> = mutableListOf()
+
+        if (conn != null) {
+            try {
+                conn!!.prepareStatement(SELECT_WITH_STOCK).use { statement ->
+                    val results = statement.executeQuery()
+
+                    while (results.next()) {
+                        val id = results.getString("ID")
+                        val nombre = results.getString("Nombre")
+                        val precio = results.getInt("Precio")
+                        val cantidad = results.getInt("Cantidad")
+                        val descripcion = results.getString("Descripcion")
+                        productosConStock.add(MisProductos(id, nombre, precio, cantidad, descripcion))
+                    }
+                }
+            } catch (e: SQLException) {
+                printSQLException(e)
+            }
+        }
+        return productosConStock
     }
 
     fun selectProducto(id_producto: String): MisProductos? {
@@ -116,6 +118,25 @@ class Gestor private constructor() {
     }
 
 
+    fun eliminarProducto(nombreProducto: String) {
+
+        if (conn != null) {
+            conn!!.autoCommit = false
+            try {
+                conn!!.prepareStatement(DELETE_PRODUCT).use { statement ->
+                    statement.setString(1, nombreProducto)
+                    println(statement)
+                    statement.executeUpdate()
+                }
+                conn!!.commit()
+            } catch (e: SQLException) {
+                conn!!.rollback()
+                printSQLException(e)
+            }
+        }
+
+    }
+
     fun insertProducto(producto: MisProductos) {
         if (conn != null) {
             conn!!.autoCommit = false
@@ -124,8 +145,8 @@ class Gestor private constructor() {
                     statement.setString(1, producto.id)
                     statement.setString(2, producto.nombre)
                     statement.setInt(3, producto.precio)
-                    statement.setInt(4,producto.cantidad)
-                    statement.setString(5,producto.descripcion)
+                    statement.setInt(4, producto.cantidad)
+                    statement.setString(5, producto.descripcion)
                     println(statement)
                     statement.executeUpdate()
                 }
