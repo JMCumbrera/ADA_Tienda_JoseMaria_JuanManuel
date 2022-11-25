@@ -1,3 +1,5 @@
+package aplicacion.modelo.clases
+
 data class MisProductos (val id: String, val nombre: String, val precio: Int, val cantidad: Int, val descripcion: String) {
     init {
         require(id.isNotEmpty()) { " La ID no puede estar vacía" }

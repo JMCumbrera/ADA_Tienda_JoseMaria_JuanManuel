@@ -1,3 +1,5 @@
+package aplicacion.modelo.sentencias
+
 class SQLStatements {
     companion object {
         const val SELECT_ALL_PRODUCTS = "SELECT * FROM productos;"

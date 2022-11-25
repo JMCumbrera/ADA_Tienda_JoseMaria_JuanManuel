@@ -1,8 +1,11 @@
-import SQLStatements.Companion.DELETE_PRODUCT
-import SQLStatements.Companion.INSERT_PRODUCT
-import SQLStatements.Companion.SELECT_ALL_PRODUCTS
-import SQLStatements.Companion.SELECT_PRODUCT_BY_ID
-import SQLStatements.Companion.SELECT_WITH_STOCK
+package aplicacion.modelo
+
+import aplicacion.modelo.clases.MisProductos
+import aplicacion.modelo.sentencias.SQLStatements.Companion.DELETE_PRODUCT
+import aplicacion.modelo.sentencias.SQLStatements.Companion.INSERT_PRODUCT
+import aplicacion.modelo.sentencias.SQLStatements.Companion.SELECT_ALL_PRODUCTS
+import aplicacion.modelo.sentencias.SQLStatements.Companion.SELECT_PRODUCT_BY_ID
+import aplicacion.modelo.sentencias.SQLStatements.Companion.SELECT_WITH_STOCK
 import java.sql.*
 
 class Gestor private constructor() {
