@@ -11,7 +11,7 @@ fun main(){
         1 -> controlador.onProducto()
         2 -> controlador.onAllProducts()
         3 -> controlador.onInsert()
-        //4 -> TODO
+        4 -> controlador.onDelete()
         5 -> controlador.onExit()
     }
 }
