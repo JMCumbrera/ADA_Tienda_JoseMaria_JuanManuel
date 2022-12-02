@@ -37,6 +37,16 @@ class AppVista {
         return producto
     }
 
+    fun introducirNombre():String{
+        println("Introduce un nombre ")
+        return readln().trim()
+    }
+
+    fun productoEliminado(producto: MisProductos){
+        println("El producto ${producto.nombre} ha sido eliminado")
+
+    }
+    
     fun showProducts(producto: MisProductos) {
         println("Producto: ")
         println("Id: ${producto.id}")
