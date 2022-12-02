@@ -25,8 +25,7 @@ class Gestor private constructor() {
     private val user: String = "root"
     private val password: String = ""
 
-    @Volatile
-    private var conn: Connection? = null
+    @Volatile private var conn: Connection? = null
 
     fun conectarBBDD() {
         if (conn == null) {
@@ -111,18 +110,15 @@ class Gestor private constructor() {
                         producto = MisProductos(id_producto, nombre, precio, cantidad, descripcion)
                     }
                 }
-
             } catch (e: SQLException) {
                 printSQLException(e)
             }
         }
-
         return producto
     }
 
 
     fun eliminarProducto(nombreProducto: String) {
-
         if (conn != null) {
             conn!!.autoCommit = false
             try {
@@ -137,10 +133,9 @@ class Gestor private constructor() {
                 printSQLException(e)
             }
         }
-
     }
 
-    fun insertProducto(producto: MisProductos) {
+    fun insertProducto(producto: MisProductos): MisProductos {
         if (conn != null) {
             conn!!.autoCommit = false
             try {
@@ -159,6 +154,7 @@ class Gestor private constructor() {
                 printSQLException(e)
             }
         }
+        return producto
     }
 
     private fun printSQLException(ex: SQLException) {
