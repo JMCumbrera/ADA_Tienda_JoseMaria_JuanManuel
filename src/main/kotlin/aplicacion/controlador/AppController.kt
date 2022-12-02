@@ -33,6 +33,24 @@ class AppController(val vista: AppVista) {
         }
     }
 
+    fun onDelete() {
+
+        val gestor: Gestor = Gestor.getInstance()
+
+        gestor.conectarBBDD()
+
+        val producto = gestor.selectProducto(AppVista().introducirId())
+
+        if (producto == null) {
+            vista.noProdStock()
+        } else if (producto != null) {
+            gestor.eliminarProducto(AppVista().introducirNombre())
+            vista.productoEliminado(producto)
+        }
+
+
+    }
+    
     fun onInsert() {
         val gestor = Gestor.getInstance()
         gestor.conectarBBDD()
