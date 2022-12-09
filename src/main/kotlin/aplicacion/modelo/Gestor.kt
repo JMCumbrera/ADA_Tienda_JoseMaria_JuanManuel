@@ -7,7 +7,9 @@ import aplicacion.modelo.sentencias.SQLStatements.Companion.SELECT_ALL_PRODUCTS
 import aplicacion.modelo.sentencias.SQLStatements.Companion.SELECT_PRODUCT_BY_ID
 import aplicacion.modelo.sentencias.SQLStatements.Companion.SELECT_WITH_STOCK
 import aplicacion.modelo.sentencias.SQLStatements.Companion.UPDATE_PRODUCT
+import com.mysql.cj.jdbc.exceptions.CommunicationsException
 import java.sql.*
+import kotlin.system.exitProcess
 
 class Gestor private constructor() {
     companion object {
@@ -30,8 +32,16 @@ class Gestor private constructor() {
 
     fun conectarBBDD() {
         if (conn == null) {
-            println("[Conexión realizada]")
-            conn = DriverManager.getConnection(url + bd, user, password)
+            try {
+                println("\n[Conexión realizada]\n")
+                conn = DriverManager.getConnection(url + bd, user, password)
+            } catch (ex: CommunicationsException) {
+                ex.printStackTrace(System.err)
+                System.err.println("\nSQLState: " + ex.sqlState)
+                System.err.println("Error Code: " + ex.errorCode)
+                System.err.println("Message: " + ex.message)
+                exitProcess(-1)
+            }
         } else {
             println("[Conexión ya existente]")
         }

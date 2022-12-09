@@ -63,14 +63,16 @@ class AppVista {
 
     fun mainMenu(): Int {
         println("Bienvenido, elija una opción: ")
+        println("=============================")
         println("1. Insertar un producto")
         println("2. Mostrar todos los productos")
         println("3. Mostrar un producto")
         println("4. Mostrar productos con stock ")
         println("5. Actualizar un producto")
         println("6. Borrar un producto")
-        println("7. Salir \n")
-        println("Elija una opción: ")
+        println("7. Salir")
+        println("=============================")
+        println("\nElija una opción: ")
         return readln().trim().toInt()
     }
 
