@@ -6,6 +6,7 @@ import aplicacion.modelo.sentencias.SQLStatements.Companion.INSERT_PRODUCT
 import aplicacion.modelo.sentencias.SQLStatements.Companion.SELECT_ALL_PRODUCTS
 import aplicacion.modelo.sentencias.SQLStatements.Companion.SELECT_PRODUCT_BY_ID
 import aplicacion.modelo.sentencias.SQLStatements.Companion.SELECT_WITH_STOCK
+import aplicacion.modelo.sentencias.SQLStatements.Companion.UPDATE_PRODUCT
 import java.sql.*
 
 class Gestor private constructor() {
@@ -73,6 +74,7 @@ class Gestor private constructor() {
         var productosConStock: MutableList<MisProductos> = mutableListOf()
 
         if (conn != null) {
+            conn!!.autoCommit = false
             try {
                 conn!!.prepareStatement(SELECT_WITH_STOCK).use { statement ->
                     val results = statement.executeQuery()
@@ -85,8 +87,10 @@ class Gestor private constructor() {
                         val descripcion = results.getString("Descripcion")
                         productosConStock.add(MisProductos(id, nombre, precio, cantidad, descripcion))
                     }
+                    conn!!.commit()
                 }
             } catch (e: SQLException) {
+                conn!!.rollback()
                 printSQLException(e)
             }
         }
@@ -97,6 +101,7 @@ class Gestor private constructor() {
         var producto: MisProductos? = null
 
         if (conn != null) {
+            conn!!.autoCommit = false
             try {
                 conn!!.prepareStatement(SELECT_PRODUCT_BY_ID).use { statement ->
                     statement.setString(1, id_producto)
@@ -109,14 +114,15 @@ class Gestor private constructor() {
                         val descripcion = results.getString("Descripcion")
                         producto = MisProductos(id_producto, nombre, precio, cantidad, descripcion)
                     }
+                    conn!!.commit()
                 }
             } catch (e: SQLException) {
+                conn!!.rollback()
                 printSQLException(e)
             }
         }
         return producto
     }
-
 
     fun eliminarProducto(nombreProducto: String) {
         if (conn != null) {
@@ -133,6 +139,34 @@ class Gestor private constructor() {
                 printSQLException(e)
             }
         }
+    }
+
+    fun updateProducto(producto: MisProductos): MisProductos? {
+        var productoActualizado: MisProductos? = null
+        var rowUpdated = false
+
+        if (conn != null) {
+            conn!!.autoCommit = false
+            try {
+                conn!!.prepareStatement(UPDATE_PRODUCT).use { statement ->
+                    statement.setString(5, producto.id)
+                    statement.setString(1 , producto.nombre)
+                    statement.setInt(2, producto.precio)
+                    statement.setInt(3, producto.cantidad)
+                    statement.setString(4, producto.descripcion)
+                    rowUpdated = statement.executeUpdate() > 0
+                }
+                conn!!.commit()
+            } catch (e: SQLException) {
+                conn!!.rollback()
+                printSQLException(e)
+            }
+        }
+
+        return if (rowUpdated) {
+            productoActualizado = producto
+            productoActualizado
+        } else { productoActualizado }
     }
 
     fun insertProducto(producto: MisProductos): MisProductos {

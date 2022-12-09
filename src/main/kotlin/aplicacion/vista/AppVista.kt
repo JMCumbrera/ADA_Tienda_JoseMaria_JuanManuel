@@ -37,18 +37,21 @@ class AppVista {
         return producto
     }
 
-    fun introducirNombre():String{
-        println("Introduce un nombre ")
+    fun introducirNombre(): String {
+        println("Introduzca un nombre: ")
         return readln().trim()
     }
 
-    fun productoEliminado(producto: MisProductos){
+    fun productoEliminado(producto: MisProductos) {
         println("El producto ${producto.nombre} ha sido eliminado")
+    }
 
+    fun productoActualizado(producto: MisProductos) {
+        println("El producto ${producto.nombre} ha sido actualizado")
     }
     
     fun showProducts(producto: MisProductos) {
-        println("Producto: ")
+        println("\nProducto: ")
         println("Id: ${producto.id}")
         println("Nombre: ${producto.nombre}")
         println("Descripción: ${producto.descripcion}")
@@ -60,11 +63,14 @@ class AppVista {
 
     fun mainMenu(): Int {
         println("Bienvenido, elija una opción: ")
-        println("1. Mostrar un producto ")
-        println("2. Mostrar productos con stock ")
-        println("3. Insertar un producto")
-        println("4. Borrar un producto")
-        println("5. Salir ")
+        println("1. Insertar un producto")
+        println("2. Mostrar todos los productos")
+        println("3. Mostrar un producto")
+        println("4. Mostrar productos con stock ")
+        println("5. Actualizar un producto")
+        println("6. Borrar un producto")
+        println("7. Salir \n")
+        println("Elija una opción: ")
         return readln().trim().toInt()
     }
 

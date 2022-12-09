@@ -5,7 +5,7 @@ import aplicacion.modelo.clases.MisProductos
 import aplicacion.vista.AppVista
 
 class AppController(val vista: AppVista) {
-    fun onAllProducts(){
+    fun onStockProducts() {
         val gestor: Gestor = Gestor.getInstance()
         gestor.conectarBBDD()
 
@@ -14,7 +14,21 @@ class AppController(val vista: AppVista) {
         when {
             (listaProductos == null) -> { vista.baseDeDatosCaida() }
             (listaProductos.isEmpty()) -> { vista.noProdStock() }
-            (listaProductos.size > 0) -> { for (producto in listaProductos) { vista.showProducts(producto) } }
+            (listaProductos.size > 0) -> { for (producto in listaProductos) vista.showProducts(producto) }
+            else -> { vista.errorGeneral() }
+        }
+    }
+
+    fun onAllProducts() {
+        val gestor: Gestor = Gestor.getInstance()
+        gestor.conectarBBDD()
+
+        val listaProductos: List<MisProductos>? = gestor.selectAll()
+
+        when {
+            (listaProductos == null) -> { vista.baseDeDatosCaida() }
+            (listaProductos.isEmpty()) -> { vista.noProdStock() }
+            (listaProductos.size > 0) -> { for (producto in listaProductos) vista.showProducts(producto) }
             else -> { vista.errorGeneral() }
         }
     }
@@ -34,21 +48,32 @@ class AppController(val vista: AppVista) {
     }
 
     fun onDelete() {
-
         val gestor: Gestor = Gestor.getInstance()
-
         gestor.conectarBBDD()
 
         val producto = gestor.selectProducto(AppVista().introducirId())
 
-        if (producto == null) {
-            vista.noProdStock()
-        } else if (producto != null) {
-            gestor.eliminarProducto(AppVista().introducirNombre())
-            vista.productoEliminado(producto)
+        when {
+            (producto == null) -> { vista.noProdStock() }
+            (producto != null) -> {
+                gestor.eliminarProducto(AppVista().introducirNombre())
+                vista.productoEliminado(producto)
+            }
+            else -> { vista.errorGeneral() }
         }
+    }
 
+    fun onUpdate() {
+        val gestor: Gestor = Gestor.getInstance()
+        gestor.conectarBBDD()
 
+        val producto = gestor.updateProducto(AppVista().introducirProducto())
+
+        when {
+            (producto == null) -> { vista.nullProductError() }
+            (producto != null) -> { vista.productoActualizado(producto) }
+            else -> { vista.errorGeneral() }
+        }
     }
     
     fun onInsert() {

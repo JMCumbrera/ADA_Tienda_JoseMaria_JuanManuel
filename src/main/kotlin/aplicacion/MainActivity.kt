@@ -8,10 +8,12 @@ fun main(){
     val controlador : AppController = AppController(vista)
 
     when(controlador.onStart()){
-        1 -> controlador.onProducto()
+        1 -> controlador.onInsert()
         2 -> controlador.onAllProducts()
-        3 -> controlador.onInsert()
-        4 -> controlador.onDelete()
-        5 -> controlador.onExit()
+        3 -> controlador.onProducto()
+        4 -> controlador.onStockProducts()
+        5 -> controlador.onUpdate()
+        6 -> controlador.onDelete()
+        7 -> controlador.onExit()
     }
 }
