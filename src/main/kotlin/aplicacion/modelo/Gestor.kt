@@ -100,8 +100,8 @@ class Gestor private constructor() {
                     conn!!.commit()
                 }
             } catch (e: SQLException) {
-                conn!!.rollback()
                 printSQLException(e)
+                desconectar()
             }
         }
         return productosConStock
@@ -127,7 +127,6 @@ class Gestor private constructor() {
                     conn!!.commit()
                 }
             } catch (e: SQLException) {
-                conn!!.rollback()
                 printSQLException(e)
             }
         }
@@ -147,6 +146,7 @@ class Gestor private constructor() {
             } catch (e: SQLException) {
                 conn!!.rollback()
                 printSQLException(e)
+                desconectar()
             }
         }
     }
@@ -170,6 +170,7 @@ class Gestor private constructor() {
             } catch (e: SQLException) {
                 conn!!.rollback()
                 printSQLException(e)
+                desconectar()
             }
         }
 
@@ -196,6 +197,7 @@ class Gestor private constructor() {
             } catch (e: SQLException) {
                 conn!!.rollback()
                 printSQLException(e)
+                desconectar()
             }
         }
         return producto
